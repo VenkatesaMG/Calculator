@@ -1,39 +1,33 @@
 #include "window.h"
 #include <QString>
+#include <QGraphicsDropShadowEffect>
 
 Window::Window(QWidget *parent)
     : QWidget{parent}
 {
     this->setStyleSheet(
-        "QWidget {"
-        "   background-color: #1e1e1e;"
-        "   color: white;"
+        "Window {"
+        "   background-color: white;"
+        "   color: black;"
         "   font-size: 20px;"
         "}"
 
         "QPushButton {"
-        "   background-color: #3a3a3a;"
-        "   border: 1px solid #555;"
+        "   background-color: #e8eaed;"
+        "   color: black;"
         "   padding: 10px;"
         "   width: 20px;"
         "   height: 20px;"
-        "   border-radius: 10px;"
-        "}"
-
-        "QPushButton:hover {"
-        "   background-color: #505050;"
-        "}"
-
-        "QPushButton:pressed {"
-        "   background-color: #222;"
+        "   border-radius: 20px;"
         "}"
 
         "QLineEdit {"
-        "   background-color: black;"
-        "   border: 1px solid #888;"
-        "   padding: 6px;"
-        "   font-size: 24px;"
-        "   border-radius: 10px 10px 0px 0px;"
+        "   background-color: white;"
+        "   color: black;"
+        "   padding: 10px;"
+        "   font-size: 18px;"
+        "   border-radius: 18px;"
+        "   margin: 8px 4px 8px 4xp;"
         "}"
         );
 
@@ -50,17 +44,28 @@ Window::Window(QWidget *parent)
 
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 4; j++) {
-
+            QGraphicsDropShadowEffect *btnShadow = new QGraphicsDropShadowEffect;
+            btnShadow->setBlurRadius(15);
+            btnShadow->setOffset(0, 3);
+            btnShadow->setColor(QColor(0, 0, 0, 100));
             QPushButton *btn = new QPushButton(
                 QString::fromStdString(buttons[i][j]),
                 this
                 );
+
+            btn->setGraphicsEffect(btnShadow);
             connect(btn, &QPushButton::clicked, this, &Window::slotOnButtonClicked);
             grid->addWidget(btn, i, j);
         }
     }
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(20);
+    shadow->setOffset(3, 3);
+    shadow->setColor(QColor(0, 0, 0, 160));
+
     display = new QLineEdit("", this);
     display->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    display->setGraphicsEffect(shadow);
     outerLayout->addWidget(display);
     outerLayout->addLayout(grid);
     setLayout(outerLayout);
@@ -71,10 +76,10 @@ void Window::slotOnButtonClicked(){
     if(!btn) return;
 
     QString text = btn->text();
-    if(text == "CLR"){
+    if(text == "C"){
         display->clear();
         return;
-    } else if(text == "DEL"){
+    } else if(text == "D"){
         QString tmp = display->text();
         if(!tmp.isEmpty()){
             display->backspace();
